@@ -64,6 +64,9 @@ class Game:
             print("{}'s turn".format(self.current_player.name))
             print("Tokens Left: {}  Moves Left: {}\n".format(self.current_player.tokens, self.current_player.moves))
             while True:
+                if self.current_player.moves == 0:
+                    print("You are out of moves")
+                    break
                 attempt = self.current_player.get_next_move()
                 if attempt:
                     if attempt[0] == "1":
@@ -85,3 +88,7 @@ class Game:
                 return True
             # change current player
             self.current_player = self.get_next_player()
+            # check for game over
+            if self.current_player.moves == 0 and self.get_next_player().moves == 0:
+                print("NO MORE MOVES, GAME OVER\n")
+                return False
