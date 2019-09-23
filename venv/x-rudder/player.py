@@ -53,6 +53,9 @@ class ManualPlayer(Player):
     def get_next_move(self):
         while True:
             move_type = input("Play your next turn:\n1. Place New Token\n2. Move Token\nChoose 1 or 2: ")
+            # place new token
+            # Validation on whether a token can be placed is not performed here
+            # it is done in the place_tile function of the Board class
             if move_type == "1":
                 if self.tokens == 0:
                     print("You no longer have tokens to place, you can try moving a token\n")
@@ -60,23 +63,32 @@ class ManualPlayer(Player):
                 while True:
                     move_input = input("Where would you like to place your token?\n"
                                        "Input coordinates separated by a space: ")
+                    # convert visual coordinates to board coordinate values
                     coordinates = Player.get_coordinates(move_input)
                     if not coordinates:
                         print("Invalid Coordinates, try again\n")
                         continue
                     return move_type, coordinates
+            # Move existing token
             elif move_type == "2":
                 if self.moves == 0:
                     print("You have no moves left\n")
                     return False
+                # Loop for choosing which token to move
+                # Validation on whether a token can be moved is not performed here
+                # it is done in the change_tile function of the Board class
                 while True:
                     token_input = input("Which token would you like to move?\n"
                                         "Input coordinates separated by a space: ")
+                    # convert visual coordinates to board coordinate values
                     token_coordinates = Player.get_coordinates(token_input)
                     if not token_coordinates:
                         print("Invalid Coordinates, try again\n")
                         continue
                     break
+                # Loop for choosing where to move token
+                # Validation on whether a token can be placed is not performed here
+                # it is done in the change_tile function of the Board class
                 while True:
                     move_input = input("Where would you like to move the token to?\n"
                                        "Input coordinates separated by a space: ")
