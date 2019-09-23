@@ -1,72 +1,5 @@
-import numpy as np
-from random import choice
-
-
-class Player:
-
-    count = 0
-
-    def __init__(self, name, tokens, moves):
-        Player.count += 1
-        self.name = name
-        self.tokens = tokens
-        self.moves = moves
-        self.id = Player.count
-
-    def place_token(self, width, height, board):
-        play = board.fill_tile(width, height, self.id)
-        if play:
-            self.tokens -= 1
-            self.moves -= 1
-        return play
-
-    def move_token(self, old_width, old_height, new_width, new_height, board):
-        play = board.change_tile(old_width, old_height, new_width, new_height)
-        if play:
-            self.moves -= 1
-        return play
-
-
-class ManualPlayer(Player):
-    def __init__(self, name, tokens, moves):
-        super().__init__(name, tokens, moves)
-
-    def get_next_move(self):
-        pass
-
-
-class AIPlayer(Player):
-    def __init__(self, tokens, moves):
-        names = ("TARS", "Ava", "J.A.R.V.I.S", "Friday", "Christopher", "Ultron", "Samantha", "HAL 9000")
-        super().__init__(choice(names), tokens, moves)
-
-    def get_next_move(self):
-        pass
-
-
-class Board:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self.board = np.zeros(width, height)
-
-    def fill_tile(self, width, height, value):
-        if self.board[width, height] == 0:
-            self.board[width, height] = value
-            return True
-        return False
-
-    def change_tile(self, old_width, old_height, new_width, new_height, value):
-        if self.board[old_width, old_height] != value and self.board[new_width, new_height] != 0:
-            return False
-        self.board[old_width, old_height] = 0
-        self.board[new_width, new_height] = value
-
-    def tile_is_empty(self, width, height):
-        return self.board[width, height] == 0
-
-    def tile_has_token(self, width, height, value):
-        return self.board[width, height] == value
+from player import Player, ManualPlayer, AIPlayer
+from board import Board
 
 
 class Game:
@@ -99,9 +32,9 @@ class Game:
         return True
 
     def find_strikethrough(self, width, height, value):
-        if self.board.board[width-1, height] != value:
+        if self.board.board[width, height+1] != value:
             return False
-        if self.board.board[width+1, height] != value:
+        if self.board.board[width, height-1] != value:
             return False
         return True
 
@@ -117,10 +50,38 @@ class Game:
         for row in range(1, self.board.width-2):
             for cell in range(1, self.board.height-2):
                 if self.find_cross(row, cell, self.get_next_player().id):
-                    if not self.find_strikethrough(row, cell, self.current_player().id):
+                    if not self.find_strikethrough(row, cell, self.current_player.id):
                         return self.get_next_player().name
 
         return False
 
     def play(self):
-        pass
+        # loop while moves remain
+        while True:
+            # display board
+            self.board.display()
+            # allow player one to play
+            print("{}'s turn".format(self.current_player.name))
+            print("Tokens Left: {}  Moves Left: {}\n".format(self.current_player.tokens, self.current_player.moves))
+            while True:
+                attempt = self.current_player.get_next_move()
+                if attempt:
+                    if attempt[0] == "1":
+                        if self.current_player.place_token(attempt[1][1], attempt[1][0], self.board):
+                            break
+                        print("Move is invalid, try a different move\n")
+                    elif attempt[0] == "2":
+                        if self.current_player.move_token(attempt[1][1], attempt[1][0],
+                                                          attempt[2][1], attempt[2][0], self.board):
+                            break
+                        print("Move is invalid, try a different move\n")
+            print("{}'s turn has ended\n".format(self.current_player.name))
+            # display board
+            self.board.display()
+            # check for winner
+            winner = self.evaluate_winner()
+            if winner:
+                print("{} has won the game!\n".format(winner))
+                return True
+            # change current player
+            self.current_player = self.get_next_player()
