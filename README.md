@@ -1,7 +1,7 @@
 # x-rudder
 X-Rudder is a 2-player adversary game played with 30 square tokens (15/per color) on 12x10(12(width)x 10(height))board that is initially empty. The board is numbered 1 to 10 from bottom to top, and A to L from left to right.
 
-Each player take turnplacing his/her tokens on the boardor moving them (up,down,left, right, and  diagonal). As  soon  as  one  player  is  able set an  X with  his  5 five  tokens  and  avoided  a strikethrough Xhe/she becomes a winner only if he/she completed the X and the opponent did not strikethrough his/her X., that is,the opponentputs his/her two token on the leftand right to the center of thecentral token of the X.
+Each player takes turn placing their tokens on the board or moving them (up, down, left, right, and  diagonal). As  soon  as  one  player is able to set an X with their 5 five tokens and avoided a strikethrough they become a winner only if they completed the X and the opponent did not strikethrough their X, that is, the opponent puts their two tokens on the left and right to the center of the central token of the X.
 
 ## Playing with two manual players
 In this case, both players are controlled by a human
