@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, randrange
 
 
 class Player:
@@ -107,4 +107,10 @@ class AIPlayer(Player):
         super().__init__(choice(names), tokens, moves)
 
     def get_next_move(self):
-        pass
+        if self.tokens == 0:
+            print("You no longer have tokens to place, you can try moving a token\n")
+            return False
+        width = randrange(0, 12, 1)
+        height = randrange(0, 10, 1)
+        print("({}, {})".format(width, height))
+        return "1", (width, height)

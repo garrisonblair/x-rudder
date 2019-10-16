@@ -17,9 +17,9 @@ def main():
             player_2 = ManualPlayer(p2_name, 15, 30)
             break
         elif game_type == "2":
-            # player_2 = AIPlayer(15, 30)
-            print("Coming Soon...")
-            pass
+            player_2 = AIPlayer(15, 30)
+            # print("Coming Soon...")
+            break
 
     print("Starting Game...")
 
