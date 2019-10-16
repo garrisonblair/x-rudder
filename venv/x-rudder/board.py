@@ -14,8 +14,15 @@ class Board:
         return False
 
     def change_tile(self, old_width, old_height, new_width, new_height, value):
+        # Check that the player is trying to move his token, and that the tile being moved to is empty
         if self.board[old_width, old_height] != value or self.board[new_width, new_height] != 0:
             return False
+        # Check that the player is moving to an adjacent tile
+        if new_width > old_width + 1 or new_width < old_width - 1:
+            return False
+        if new_height > old_height + 1 or new_height < old_height - 1:
+            return False
+        # Move the token
         self.board[old_width, old_height] = 0
         self.board[new_width, new_height] = value
         return True
