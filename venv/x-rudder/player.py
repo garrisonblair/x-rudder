@@ -1,9 +1,11 @@
-from random import choice, randrange
+from random import choice
+from math import inf
+from .state import State
 
 
 class Player:
-
     count = 0
+    game_state = State(0, 0, 0, 0, 0, 0)
 
     def __init__(self, name, tokens, moves):
         Player.count += 1
@@ -24,6 +26,39 @@ class Player:
         if play:
             self.moves -= 1
         return play
+
+    @staticmethod
+    def set_state(width=None, height=None, p1_tokens=None, p1_moves=None, p2_tokens=None, p2_moves=None, turn=None):
+        if width:
+            Player.game_state.width = width
+        if height:
+            Player.game_state.height = height
+        if p1_tokens:
+            Player.game_state.p1_tokens = p1_tokens
+        if p1_moves:
+            Player.game_state.p1_moves = p1_moves
+        if p2_tokens:
+            Player.game_state.p2_tokens = p2_tokens
+        if p2_moves:
+            Player.game_state.p2_moves = p2_moves
+        if turn:
+            Player.game_state.turn = turn
+
+    @staticmethod
+    def p1_add_coordinate(x, y):
+        Player.game_state.p1_coordinates.append((x, y))
+
+    @staticmethod
+    def p1_remove_coordinate(x, y):
+        Player.game_state.p1_coordinates.remove((x, y))
+
+    @staticmethod
+    def p2_add_coordinate(x, y):
+        Player.game_state.p2_coordinates.append((x, y))
+
+    @staticmethod
+    def p2_remove_coordinate(x, y):
+        Player.game_state.p2_coordinates.remove((x, y))
 
     @staticmethod
     def get_coordinates(text_input):
@@ -99,18 +134,3 @@ class ManualPlayer(Player):
                     break
                 return move_type, token_coordinates, move_coordinates
             print(move_type, " is not a valid input, try again\n")
-
-
-class AIPlayer(Player):
-    def __init__(self, tokens, moves):
-        names = ("TARS", "Ava", "J.A.R.V.I.S", "Friday", "Christopher", "Ultron", "Samantha", "HAL 9000")
-        super().__init__(choice(names), tokens, moves)
-
-    def get_next_move(self):
-        if self.tokens == 0:
-            print("You no longer have tokens to place, you can try moving a token\n")
-            return False
-        width = randrange(0, 12, 1)
-        height = randrange(0, 10, 1)
-        print("({}, {})".format(width, height))
-        return "1", (width, height)

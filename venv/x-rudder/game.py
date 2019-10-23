@@ -1,5 +1,6 @@
-from player import Player, ManualPlayer, AIPlayer
-from board import Board
+from .player import Player, ManualPlayer, AIPlayer
+from .board import Board
+from .state import State
 
 
 class Game:
@@ -60,6 +61,7 @@ class Game:
         while True:
             # display board
             self.board.display()
+
             # allow player one to play
             print("{}'s turn".format(self.current_player.name))
             print("Tokens Left: {}  Moves Left: {}\n".format(self.current_player.tokens, self.current_player.moves))
@@ -67,30 +69,56 @@ class Game:
                 if self.current_player.moves == 0:
                     print("You are out of moves")
                     break
+
                 # Poll the player for their next move
                 attempt = self.current_player.get_next_move()
                 if attempt:
                     # Player decides to place a new token
                     if attempt[0] == "1":
                         if self.current_player.place_token(attempt[1][1], attempt[1][0], self.board):
+                            # Update Game State
+                            if self.current_player.id == 1:
+                                Player.p1_add_coordinate(attempt[1][1], attempt[1][0])
+                                Player.set_state(p1_tokens=self.current_player.tokens,
+                                                 p1_moves=self.current_player.moves)
+                            elif self.current_player.id == 2:
+                                Player.p2_add_coordinate(attempt[1][1], attempt[1][0])
+                                Player.set_state(p2_tokens=self.current_player.tokens,
+                                                 p2_moves=self.current_player.moves)
                             break
                         print("Move is invalid, try a different move\n")
+
                     # PLayer decides to move an existing token
                     elif attempt[0] == "2":
                         if self.current_player.move_token(attempt[1][1], attempt[1][0],
                                                           attempt[2][1], attempt[2][0], self.board):
+                            # Update Game State
+                            if self.current_player.id == 1:
+                                Player.p1_remove_coordinate(attempt[1][1], attempt[1][0])
+                                Player.p1_add_coordinate(attempt[2][1], attempt[2][0])
+                                Player.set_state(p1_moves=self.current_player.moves)
+                            elif self.current_player.id == 2:
+                                Player.p2_remove_coordinate(attempt[1][1], attempt[1][0])
+                                Player.p2_add_coordinate(attempt[2][1], attempt[2][0])
+                                Player.set_state(p2_moves=self.current_player.moves)
                             break
                         print("Move is invalid, try a different move\n")
+
             print("{}'s turn has ended\n".format(self.current_player.name))
+
             # display board
             self.board.display()
+
             # check for winner
             winner = self.evaluate_winner()
             if winner:
                 print("{} has won the game!\n".format(winner))
                 return True
-            # change current player
+
+            # change current player and update game state
             self.current_player = self.get_next_player()
+            Player.set_state(turn=self.current_player.id)
+
             # check for game over
             if self.current_player.moves == 0 and self.get_next_player().moves == 0:
                 print("NO MORE MOVES, GAME OVER\n")

@@ -1,5 +1,5 @@
-from game import *
-from player import *
+from .game import *
+from .player import *
 
 
 def main():
@@ -24,6 +24,7 @@ def main():
     print("Starting Game...")
 
     game = Game(10, 12, player_1, player_2, 15, 30)
+    Player.set_state(width=10, height=12, p1_tokens=15, p1_moves=30, p2_tokens=15, p2_moves=30, turn=1)
     game.play()
 
 
