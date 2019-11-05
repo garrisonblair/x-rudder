@@ -1,6 +1,7 @@
-from .player import Player, ManualPlayer, AIPlayer
-from .board import Board
-from .state import State
+from player import Player, ManualPlayer
+from ai_player import AIPlayer
+from board import Board
+from state import State
 
 
 class Game:
@@ -72,6 +73,7 @@ class Game:
 
                 # Poll the player for their next move
                 attempt = self.current_player.get_next_move()
+                print("B: {}".format(attempt[1]))
                 if attempt:
                     # Player decides to place a new token
                     if attempt[0] == "1":

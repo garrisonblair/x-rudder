@@ -15,3 +15,6 @@ class State:
             return True
         else:
             return False
+
+    def get_value(self):
+        return self
