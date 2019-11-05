@@ -12,6 +12,13 @@ class Player:
         self.moves = moves
         self.id = Player.count
 
+    def place_token(self, width, height, board):
+        play = board.fill_tile(width, height, self.id)
+        if play:
+            self.tokens -= 1
+            self.moves -= 1
+        return play
+
     def move_token(self, old_width, old_height, new_width, new_height, board):
         play = board.change_tile(old_width, old_height, new_width, new_height, self.id)
         if play:
@@ -44,12 +51,12 @@ class Player:
         Player.game_state.p1_coordinates.remove((x, y))
 
     @staticmethod
-    def p2_add_coordinate(y, x):
-        Player.game_state.p2_coordinates.append((x, y))
+    def p2_add_coordinate(x, y):
+        Player.game_state.p2_coordinates.append((y, x))
 
     @staticmethod
-    def p2_remove_coordinate(y, x):
-        Player.game_state.p2_coordinates.remove((x, y))
+    def p2_remove_coordinate(x, y):
+        Player.game_state.p2_coordinates.remove((y, x))
 
     @staticmethod
     def get_coordinates(text_input):
@@ -75,14 +82,6 @@ class Player:
 class ManualPlayer(Player):
     def __init__(self, name, tokens, moves):
         super().__init__(name, tokens, moves)
-
-    def place_token(self, width, height, board):
-        print("C: {}, {}".format(width, height))
-        play = board.fill_tile(width, height, self.id)
-        if play:
-            self.tokens -= 1
-            self.moves -= 1
-        return play
 
     def get_next_move(self):
         while True:

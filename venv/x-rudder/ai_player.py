@@ -11,14 +11,6 @@ class AIPlayer(Player):
         names = ("TARS", "Ava", "J.A.R.V.I.S", "Friday", "Christopher", "Ultron", "Samantha", "HAL 9000")
         super().__init__(choice(names), tokens, moves)
 
-    def place_token(self, height, width, board):
-        print("D: {}, {}".format(width, height))
-        play = board.fill_tile(width, height, self.id)
-        if play:
-            self.tokens -= 1
-            self.moves -= 1
-        return play
-
     def get_next_move(self):
         if self.tokens == 0:
             print("You no longer have tokens to place, you can try moving a token\n")
@@ -27,21 +19,20 @@ class AIPlayer(Player):
         print("Score: {}\nMove: {}".format(score, move))
 
         if move['move_from'] == (-1, -1):
-            print("A: {}".format(move['move_to']))
             return "1", move['move_to']
         else:
             return "2", move['move_from'], move['move_to']
 
     @staticmethod
-    def evaluate_state(state, is_max, is_test=False):
+    def evaluate_state(state, is_max):
         max_score = 0
         min_score = 0
 
         w_2 = 10
         w_3_one_cross = 30
-        w_3_no_cross = 40
-        w_4_one_cross = 60
-        w_4_no_cross = 70
+        w_3_no_cross = 50
+        w_4_one_cross = 250
+        w_4_no_cross = 800
         w_5_not_crossed = 10000
 
         num_2_max = 0
@@ -58,12 +49,7 @@ class AIPlayer(Player):
         num_4_no_cross_min = 0
         num_5_not_crossed_min = 0
 
-        if is_test:
-            print("P2")
         for (x, y) in state.p2_coordinates:
-            if is_test:
-                print((x, y))
-                print(state.p2_coordinates)
             shape_size = 1
             shape_tiles = []
             num_crosses = 0
@@ -102,9 +88,7 @@ class AIPlayer(Player):
                 if num_crosses != 2:
                     num_5_not_crossed_max += 1
 
-        # print("P1")
         for (x, y) in state.p1_coordinates:
-            # print((x, y))
             shape_size = 1
             shape_tiles = []
             num_crosses = 0
@@ -160,7 +144,8 @@ class AIPlayer(Player):
         score = 0
         # print("max: {}\nmin: {}".format(max_score, min_score))
         if is_max:
-            score = max_score - min_score
+
+            score = max_score - 1.2 * min_score
         elif not is_max:
             score = min_score - max_score
         return score
@@ -268,9 +253,6 @@ class AIPlayer(Player):
 
         for key in state_keys:
             child_score, child_state = self.mini_max(possible_states[key]['state'], depth - 1, not is_max)
-            # print(child_score)
-            # print(is_max)
-            # print(possible_states[key]['move_to'])
 
             if is_max:
                 if child_score > best_score:
@@ -282,6 +264,4 @@ class AIPlayer(Player):
                     best_score = child_score
                     next_move = possible_states[key]
 
-        print("TEST")
-        AIPlayer.evaluate_state(next_move['state'], is_max=True, is_test=True)
         return best_score, next_move
