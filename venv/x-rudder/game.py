@@ -2,6 +2,7 @@ from player import Player, ManualPlayer
 from ai_player import AIPlayer
 from board import Board
 from state import State
+import pdb
 
 
 class Game:
@@ -58,11 +59,11 @@ class Game:
         return False
 
     def play(self):
+        # display board
+        self.board.display()
+
         # loop while moves remain
         while True:
-            # display board
-            self.board.display()
-
             # allow player one to play
             print("{}'s turn".format(self.current_player.name))
             print("Tokens Left: {}  Moves Left: {}\n".format(self.current_player.tokens, self.current_player.moves))
@@ -89,6 +90,7 @@ class Game:
                                                  p2_moves=self.current_player.moves)
                             break
                         print("Move is invalid, try a different move\n")
+                        pdb.set_trace()
 
                     # PLayer decides to move an existing token
                     elif attempt[0] == "2":
@@ -110,6 +112,7 @@ class Game:
 
             # display board
             self.board.display()
+            # pdb.set_trace()
 
             # check for winner
             winner = self.evaluate_winner()

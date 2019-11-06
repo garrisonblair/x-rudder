@@ -28,12 +28,19 @@ class AIPlayer(Player):
         max_score = 0
         min_score = 0
 
-        w_2 = 10
-        w_3_one_cross = 30
-        w_3_no_cross = 50
-        w_4_one_cross = 250
-        w_4_no_cross = 800
-        w_5_not_crossed = 10000
+        w_2_max = 10
+        w_3_one_cross_max = 50
+        w_3_no_cross_max = 200
+        w_4_one_cross_max = 1000
+        w_4_no_cross_max = 1500
+        w_5_not_crossed_max = 100000
+
+        w_2_min = 10
+        w_3_one_cross_min = 50
+        w_3_no_cross_min = 1500
+        w_4_one_cross_min = 3000
+        w_4_no_cross_min = 4500
+        w_5_not_crossed_min = 100000
 
         num_2_max = 0
         num_3_one_cross_max = 0
@@ -127,25 +134,24 @@ class AIPlayer(Player):
                 if num_crosses != 2:
                     num_5_not_crossed_min += 1
 
-        max_score += (w_2 * num_2_max +
-                      w_3_one_cross * num_3_one_cross_max +
-                      w_3_no_cross * num_3_no_cross_max +
-                      w_4_one_cross * num_4_one_cross_max +
-                      w_4_no_cross * num_4_no_cross_max +
-                      w_5_not_crossed * num_5_not_crossed_max)
+        max_score += (w_2_max * num_2_max +
+                      w_3_one_cross_max * num_3_one_cross_max +
+                      w_3_no_cross_max * num_3_no_cross_max +
+                      w_4_one_cross_max * num_4_one_cross_max +
+                      w_4_no_cross_max * num_4_no_cross_max +
+                      w_5_not_crossed_max * num_5_not_crossed_max)
 
-        min_score += (w_2 * num_2_min +
-                      w_3_one_cross * num_3_one_cross_min +
-                      w_3_no_cross * num_3_no_cross_min +
-                      w_4_one_cross * num_4_one_cross_min +
-                      w_4_no_cross * num_4_no_cross_min +
-                      w_5_not_crossed * num_5_not_crossed_min)
+        min_score += (w_2_min * num_2_min +
+                      w_3_one_cross_min * num_3_one_cross_min +
+                      w_3_no_cross_min * num_3_no_cross_min +
+                      w_4_one_cross_min * num_4_one_cross_min +
+                      w_4_no_cross_min * num_4_no_cross_min +
+                      w_5_not_crossed_min * num_5_not_crossed_min)
 
         score = 0
         # print("max: {}\nmin: {}".format(max_score, min_score))
         if is_max:
-
-            score = max_score - 1.2 * min_score
+            score = max_score - min_score
         elif not is_max:
             score = min_score - max_score
         return score
@@ -158,7 +164,7 @@ class AIPlayer(Player):
         if state.turn == 1:
             for w in range(state.width):
                 for h in range(state.height):
-                    if (h, w) not in state.p1_coordinates + state.p2_coordinates:
+                    if ((h, w) not in state.p1_coordinates + state.p2_coordinates) and state.p1_tokens > 0:
                         new_state = copy.deepcopy(state)
                         new_state.p1_coordinates.append((h, w))
                         new_state.p1_tokens -= 1
@@ -198,7 +204,7 @@ class AIPlayer(Player):
         elif state.turn == 2:
             for w in range(state.width):
                 for h in range(state.height):
-                    if (h, w) not in state.p1_coordinates + state.p2_coordinates:
+                    if ((h, w) not in state.p1_coordinates + state.p2_coordinates) and state.p2_tokens > 0:
                         new_state = copy.deepcopy(state)
                         new_state.p2_coordinates.append((h, w))
                         new_state.p2_tokens -= 1
