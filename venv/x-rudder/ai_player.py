@@ -141,12 +141,18 @@ class AIPlayer(Player):
                       w_4_no_cross_max * num_4_no_cross_max +
                       w_5_not_crossed_max * num_5_not_crossed_max)
 
-        min_score += (w_2_min * num_2_min +
-                      w_3_one_cross_min * num_3_one_cross_min +
-                      w_3_no_cross_min * num_3_no_cross_min +
-                      w_4_one_cross_min * num_4_one_cross_min +
-                      w_4_no_cross_min * num_4_no_cross_min +
-                      w_5_not_crossed_min * num_5_not_crossed_min)
+        # min_score += (w_2_min * num_2_min +
+        #               w_3_one_cross_min * num_3_one_cross_min +
+        #               w_3_no_cross_min * num_3_no_cross_min +
+        #               w_4_one_cross_min * num_4_one_cross_min +
+        #               w_4_no_cross_min * num_4_no_cross_min +
+        #               w_5_not_crossed_min * num_5_not_crossed_min)
+        min_score += (w_2_max * num_2_min +
+                      w_3_one_cross_max * num_3_one_cross_min +
+                      w_3_no_cross_max * num_3_no_cross_min +
+                      w_4_one_cross_max * num_4_one_cross_min +
+                      w_4_no_cross_max * num_4_no_cross_min +
+                      w_5_not_crossed_max * num_5_not_crossed_min)
 
         score = 0
         # print("max: {}\nmin: {}".format(max_score, min_score))
