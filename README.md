@@ -4,11 +4,14 @@ X-Rudder is a 2-player adversary game played with 30 square tokens (15/per color
 Each player takes turn placing their tokens on the board or moving them (up, down, left, right, and  diagonal). As  soon  as  one  player is able to set an X with their 5 five tokens and avoided a strikethrough they become a winner only if they completed the X and the opponent did not strikethrough their X, that is, the opponent puts their two tokens on the left and right to the center of the central token of the X.
 
 ## Playing with two manual players
-In this case, both players are controlled by a human
+In this case, both players are controlled by a human.
+
+## Playing against an AI player
+In this case, player two is controlled by the computer, and plays automatically.
 
 ### Setting Up
 - Enter the name for Player 1 when prompted.
-- You will be asked if you want to play Manual or Automatic Mode, press 1 to select Manual
+- You will be asked if you want to play Manual or Automatic Mode, press 1 to select Manual, 2 to select Automatic.
 - Enter the name for Player 2.
 
 ### Gameplay
