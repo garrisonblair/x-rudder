@@ -210,7 +210,7 @@ class AIPlayer(Player):
                             for j in range(down, up):
                                 if i == w and j == h:
                                     continue
-                                if (i, j) not in state.p2_coordinates:
+                                if (i, j) not in state.p1_coordinates + state.p2_coordinates:
                                     new_state = copy.deepcopy(state)
                                     new_state.p1_coordinates.append((j, i))
                                     new_state.p1_coordinates.remove((h, w))
@@ -251,7 +251,7 @@ class AIPlayer(Player):
                             for j in range(down, up):
                                 if i == w and j == h:
                                     continue
-                                if (i, j) not in state.p1_coordinates:
+                                if (i, j) not in state.p1_coordinates + state.p2_coordinates:
                                     new_state = copy.deepcopy(state)
                                     new_state.p2_coordinates.append((j, i))
                                     new_state.p2_coordinates.remove((h, w))
