@@ -44,11 +44,11 @@ class Player:
 
     @staticmethod
     def p1_add_coordinate(x, y):
-        Player.game_state.p1_coordinates.append((x, y))
+        Player.game_state.p1_coordinates.append((y, x))
 
     @staticmethod
     def p1_remove_coordinate(x, y):
-        Player.game_state.p1_coordinates.remove((x, y))
+        Player.game_state.p1_coordinates.remove((y, x))
 
     @staticmethod
     def p2_add_coordinate(x, y):

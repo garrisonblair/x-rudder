@@ -107,6 +107,7 @@ class Game:
                                 Player.set_state(p2_moves=self.current_player.moves)
                             break
                         print("Move is invalid, try a different move\n")
+                        pdb.set_trace()
 
             print("{}'s turn has ended\n".format(self.current_player.name))
 

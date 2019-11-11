@@ -33,6 +33,7 @@ class AIPlayer(Player):
         w_3_no_cross_max = 200
         w_4_one_cross_max = 1000
         w_4_no_cross_max = 1500
+        w_4_blocked_max = -100
         w_5_not_crossed_max = 100000
 
         w_2_min = 10
@@ -40,6 +41,7 @@ class AIPlayer(Player):
         w_3_no_cross_min = 1500
         w_4_one_cross_min = 3000
         w_4_no_cross_min = 4500
+        w_4_blocked_min = -100
         w_5_not_crossed_min = 100000
 
         num_2_max = 0
@@ -47,6 +49,7 @@ class AIPlayer(Player):
         num_3_no_cross_max = 0
         num_4_one_cross_max = 0
         num_4_no_cross_max = 0
+        num_4_blocked_max = 0
         num_5_not_crossed_max = 0
 
         num_2_min = 0
@@ -54,6 +57,7 @@ class AIPlayer(Player):
         num_3_no_cross_min = 0
         num_4_one_cross_min = 0
         num_4_no_cross_min = 0
+        num_4_blocked_min = 0
         num_5_not_crossed_min = 0
 
         for (x, y) in state.p2_coordinates:
@@ -88,7 +92,13 @@ class AIPlayer(Player):
                     num_3_one_cross_max += 1
             elif shape_size == 4:
                 if num_crosses == 0:
-                    num_4_no_cross_max += 1
+                    if (x - 1, y - 1) in state.p1_coordinates \
+                            or (x + 1, y - 1) in state.p1_coordinates \
+                            or (x - 1, y + 1) in state.p1_coordinates \
+                            or (x + 1, y + 1) in state.p1_coordinates:
+                        num_4_blocked_max += 1
+                    else:
+                        num_4_no_cross_max += 1
                 elif num_crosses == 1:
                     num_4_one_cross_max += 1
             elif shape_size == 5:
@@ -127,7 +137,13 @@ class AIPlayer(Player):
                     num_3_one_cross_min += 1
             elif shape_size == 4:
                 if num_crosses == 0:
-                    num_4_no_cross_min += 1
+                    if (x - 1, y - 1) in state.p2_coordinates \
+                            or (x + 1, y - 1) in state.p2_coordinates \
+                            or (x - 1, y + 1) in state.p2_coordinates \
+                            or (x + 1, y + 1) in state.p2_coordinates:
+                        num_4_blocked_min += 1
+                    else:
+                        num_4_no_cross_min += 1
                 elif num_crosses == 1:
                     num_4_one_cross_min += 1
             elif shape_size == 5:
@@ -139,23 +155,19 @@ class AIPlayer(Player):
                       w_3_no_cross_max * num_3_no_cross_max +
                       w_4_one_cross_max * num_4_one_cross_max +
                       w_4_no_cross_max * num_4_no_cross_max +
+                      w_4_blocked_max * num_4_blocked_max +
                       w_5_not_crossed_max * num_5_not_crossed_max)
 
-        # min_score += (w_2_min * num_2_min +
-        #               w_3_one_cross_min * num_3_one_cross_min +
-        #               w_3_no_cross_min * num_3_no_cross_min +
-        #               w_4_one_cross_min * num_4_one_cross_min +
-        #               w_4_no_cross_min * num_4_no_cross_min +
-        #               w_5_not_crossed_min * num_5_not_crossed_min)
-        min_score += (w_2_max * num_2_min +
-                      w_3_one_cross_max * num_3_one_cross_min +
-                      w_3_no_cross_max * num_3_no_cross_min +
-                      w_4_one_cross_max * num_4_one_cross_min +
-                      w_4_no_cross_max * num_4_no_cross_min +
-                      w_5_not_crossed_max * num_5_not_crossed_min)
+        min_score += (w_2_min * num_2_min +
+                      w_3_one_cross_min * num_3_one_cross_min +
+                      w_3_no_cross_min * num_3_no_cross_min +
+                      w_4_one_cross_min * num_4_one_cross_min +
+                      w_4_no_cross_min * num_4_no_cross_min +
+                      w_4_blocked_min * num_4_blocked_min +
+                      w_5_not_crossed_min * num_5_not_crossed_min)
 
         score = 0
-        # print("max: {}\nmin: {}".format(max_score, min_score))
+
         if is_max:
             score = max_score - min_score
         elif not is_max:
@@ -198,14 +210,15 @@ class AIPlayer(Player):
                             for j in range(down, up):
                                 if i == w and j == h:
                                     continue
-                                new_state = copy.deepcopy(state)
-                                new_state.p1_coordinates.append((j, i))
-                                new_state.p1_coordinates.remove((h, w))
-                                new_state.p1_moves -= 1
+                                if (i, j) not in state.p2_coordinates:
+                                    new_state = copy.deepcopy(state)
+                                    new_state.p1_coordinates.append((j, i))
+                                    new_state.p1_coordinates.remove((h, w))
+                                    new_state.p1_moves -= 1
 
-                                states["{}_{}__{}_{}__1".format(i, j, w, h)] = dict(state=new_state,
-                                                                                    move_from=(h, w),
-                                                                                    move_to=(j, i))
+                                    states["{}_{}__{}_{}__1".format(i, j, w, h)] = dict(state=new_state,
+                                                                                        move_from=(h, w),
+                                                                                        move_to=(j, i))
 
         elif state.turn == 2:
             for w in range(state.width):
@@ -238,14 +251,15 @@ class AIPlayer(Player):
                             for j in range(down, up):
                                 if i == w and j == h:
                                     continue
-                                new_state = copy.deepcopy(state)
-                                new_state.p2_coordinates.append((j, i))
-                                new_state.p2_coordinates.remove((h, w))
-                                new_state.p2_moves -= 1
+                                if (i, j) not in state.p1_coordinates:
+                                    new_state = copy.deepcopy(state)
+                                    new_state.p2_coordinates.append((j, i))
+                                    new_state.p2_coordinates.remove((h, w))
+                                    new_state.p2_moves -= 1
 
-                                states["{}_{}__{}_{}__2".format(i, j, w, h)] = dict(state=new_state,
-                                                                                    move_from=(h, w),
-                                                                                    move_to=(j, i))
+                                    states["{}_{}__{}_{}__2".format(i, j, w, h)] = dict(state=new_state,
+                                                                                        move_from=(h, w),
+                                                                                        move_to=(j, i))
         return states
 
     def mini_max(self, state, depth, is_max):
