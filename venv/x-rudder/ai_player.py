@@ -33,6 +33,7 @@ class AIPlayer(Player):
         w_4_one_cross_max = 1000
         w_4_no_cross_max = 1500
         w_4_blocked_max = -100
+        w_4_corners_max = 1500
         w_5_not_crossed_max = 100000
 
         w_2_min = 10
@@ -41,6 +42,7 @@ class AIPlayer(Player):
         w_4_one_cross_min = 3000
         w_4_no_cross_min = 4500
         w_4_blocked_min = -100
+        w_4_corners_min = 4500
         w_5_not_crossed_min = 100000
 
         num_2_max = 0
@@ -49,6 +51,7 @@ class AIPlayer(Player):
         num_4_one_cross_max = 0
         num_4_no_cross_max = 0
         num_4_blocked_max = 0
+        num_4_corners_max = 0
         num_5_not_crossed_max = 0
 
         num_2_min = 0
@@ -57,6 +60,7 @@ class AIPlayer(Player):
         num_4_one_cross_min = 0
         num_4_no_cross_min = 0
         num_4_blocked_min = 0
+        num_4_corners_min = 0
         num_5_not_crossed_min = 0
 
         for (x, y) in state.p2_coordinates:
@@ -107,6 +111,14 @@ class AIPlayer(Player):
                 if num_crosses != 2:
                     num_5_not_crossed_max += 1
 
+            if ((x, y + 2) in state.p2_coordinates) \
+                    and ((x + 2, y) in state.p2_coordinates) \
+                    and ((x + 2, y + 2) in state.p2_coordinates):
+                if (x + 1, y + 1) not in state.p2_coordinates + state.p1_coordinates:
+                    if ((x, y + 1) not in state.p1_coordinates) \
+                            or ((x + 2, y + 1) not in state.p1_coordinates):
+                        num_4_corners_max += 1
+
         for (x, y) in state.p1_coordinates:
             shape_size = 1
             shape_tiles = []
@@ -155,12 +167,21 @@ class AIPlayer(Player):
                 if num_crosses != 2:
                     num_5_not_crossed_min += 1
 
+            if ((x, y + 2) in state.p1_coordinates) \
+                    and ((x + 2, y) in state.p1_coordinates) \
+                    and ((x + 2, y + 2) in state.p1_coordinates):
+                if (x + 1, y + 1) not in state.p1_coordinates + state.p2_coordinates:
+                    if ((x, y + 1) not in state.p2_coordinates) \
+                            or ((x + 2, y + 1) not in state.p2_coordinates):
+                        num_4_corners_min += 1
+
         max_score += (w_2_max * num_2_max +
                       w_3_one_cross_max * num_3_one_cross_max +
                       w_3_no_cross_max * num_3_no_cross_max +
                       w_4_one_cross_max * num_4_one_cross_max +
                       w_4_no_cross_max * num_4_no_cross_max +
                       w_4_blocked_max * num_4_blocked_max +
+                      w_4_corners_max * num_4_corners_max +
                       w_5_not_crossed_max * num_5_not_crossed_max)
 
         min_score += (w_2_min * num_2_min +
@@ -169,6 +190,7 @@ class AIPlayer(Player):
                       w_4_one_cross_min * num_4_one_cross_min +
                       w_4_no_cross_min * num_4_no_cross_min +
                       w_4_blocked_min * num_4_blocked_min +
+                      w_4_corners_min * num_4_corners_min +
                       w_5_not_crossed_min * num_5_not_crossed_min)
 
         score = 0
