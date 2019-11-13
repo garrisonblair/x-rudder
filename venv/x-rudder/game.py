@@ -15,6 +15,7 @@ class Game:
         self.player_2.tokens = tokens
         self.player_2.moves = moves
         self.current_player = self.player_1
+        self.moves = moves
 
     def get_next_player(self):
         if self.current_player == self.player_1:
@@ -47,14 +48,14 @@ class Game:
             for cell in range(1, self.board.height-2):
                 if self.find_cross(row, cell, self.current_player.id):
                     if not self.find_strikethrough(row, cell, self.get_next_player().id):
-                        return self.current_player.name
+                        return self.current_player
 
         # Check if next player is in a winning state
         for row in range(1, self.board.width-2):
             for cell in range(1, self.board.height-2):
                 if self.find_cross(row, cell, self.get_next_player().id):
                     if not self.find_strikethrough(row, cell, self.current_player.id):
-                        return self.get_next_player().name
+                        return self.get_next_player()
 
         return False
 
@@ -90,7 +91,8 @@ class Game:
                                                  p2_moves=self.current_player.moves)
                             break
                         print("Move is invalid, try a different move\n")
-                        #pdb.set_trace()
+                        if isinstance(self.current_player, AIPlayer):
+                            pdb.set_trace()
 
                     # PLayer decides to move an existing token
                     elif attempt[0] == "2":
@@ -107,18 +109,19 @@ class Game:
                                 Player.set_state(p2_moves=self.current_player.moves)
                             break
                         print("Move is invalid, try a different move\n")
-                        #pdb.set_trace()
+                        if isinstance(self.current_player, AIPlayer):
+                            pdb.set_trace()
 
             print("{}'s turn has ended\n".format(self.current_player.name))
 
             # display board
             self.board.display()
-            # pdb.set_trace()
 
             # check for winner
             winner = self.evaluate_winner()
             if winner:
-                print("{} has won the game!\n".format(winner))
+                moves = self.moves - winner.moves
+                print("{} has won the game in {} moves!\n".format(winner.name, moves))
                 return True
 
             # change current player and update game state

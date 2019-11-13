@@ -23,8 +23,7 @@ class AIPlayer(Player):
         else:
             return "2", move['move_from'], move['move_to']
 
-    @staticmethod
-    def evaluate_state(state, is_max):
+    def evaluate_state(self, state, is_max):
         max_score = 0
         min_score = 0
 
@@ -38,7 +37,7 @@ class AIPlayer(Player):
 
         w_2_min = 10
         w_3_one_cross_min = 50
-        w_3_no_cross_min = 1500
+        w_3_no_cross_min = 500
         w_4_one_cross_min = 3000
         w_4_no_cross_min = 4500
         w_4_blocked_min = -100
@@ -86,7 +85,10 @@ class AIPlayer(Player):
             if shape_size == 2:
                 num_2_max += 1
             elif shape_size == 3:
-                if num_crosses == 0:
+                # Might not work, remove to fix
+                if x == 0 or x == state.width - 1 or y == 0 or y == state.height - 1:
+                    continue
+                elif num_crosses == 0:
                     num_3_no_cross_max += 1
                 elif num_crosses == 1:
                     num_3_one_cross_max += 1
@@ -131,7 +133,10 @@ class AIPlayer(Player):
             if shape_size == 2:
                 num_2_min += 1
             elif shape_size == 3:
-                if num_crosses == 0:
+                # Might not work, remove to fix
+                if x == 0 or x == state.height - 1 or y == 0 or y == state.width - 1:
+                    continue
+                elif num_crosses == 0:
                     num_3_no_cross_min += 1
                 elif num_crosses == 1:
                     num_3_one_cross_min += 1
@@ -168,9 +173,9 @@ class AIPlayer(Player):
 
         score = 0
 
-        if is_max:
+        if self.id == 2:
             score = max_score - min_score
-        elif not is_max:
+        elif self.id == 1:
             score = min_score - max_score
         return score
 
@@ -210,7 +215,7 @@ class AIPlayer(Player):
                             for j in range(down, up):
                                 if i == w and j == h:
                                     continue
-                                if (i, j) not in state.p1_coordinates + state.p2_coordinates:
+                                if (j, i) not in state.p1_coordinates + state.p2_coordinates:
                                     new_state = copy.deepcopy(state)
                                     new_state.p1_coordinates.append((j, i))
                                     new_state.p1_coordinates.remove((h, w))
@@ -251,7 +256,7 @@ class AIPlayer(Player):
                             for j in range(down, up):
                                 if i == w and j == h:
                                     continue
-                                if (i, j) not in state.p1_coordinates + state.p2_coordinates:
+                                if (j, i) not in state.p1_coordinates + state.p2_coordinates:
                                     new_state = copy.deepcopy(state)
                                     new_state.p2_coordinates.append((j, i))
                                     new_state.p2_coordinates.remove((h, w))
@@ -264,7 +269,7 @@ class AIPlayer(Player):
 
     def mini_max(self, state, depth, is_max):
         if depth == 1 or state.is_terminal():
-            return AIPlayer.evaluate_state(state, not is_max), None
+            return self.evaluate_state(state, not is_max), None
 
         possible_states = AIPlayer.get_next_possible_states(state)
 

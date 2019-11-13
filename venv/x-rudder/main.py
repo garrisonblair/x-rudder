@@ -1,24 +1,33 @@
 from game import *
 from player import *
+from random import randint
 
 
 def main():
     print("#######################################")
     print("# W E L C O M E  T O  X - R U D D E R #")
     print("#######################################")
-    p1_name = input("Enter name for player 1: ")
-    player_1 = ManualPlayer(p1_name, 15, 30)
 
     while True:
-        print("\nPlayer 2 selection")
-        game_type = input("1. Manual\n2. Automatic\n")
-        if game_type == "1":
+        print("\nHow many are playing?")
+        game_type = input("1. One Player\n2. Two Player\n")
+        if game_type == "2":
+            p1_name = input("Enter name for player 1: ")
+            player_1 = ManualPlayer(p1_name, 15, 30)
             p2_name = input("Enter name for player 2: ")
             player_2 = ManualPlayer(p2_name, 15, 30)
             break
-        elif game_type == "2":
-            player_2 = AIPlayer(15, 30)
-            # print("Coming Soon...")
+        elif game_type == "1":
+            if randint(0, 1) == 0:
+                print("You will play first")
+                p1_name = input("Enter name for player 1: ")
+                player_1 = ManualPlayer(p1_name, 15, 30)
+                player_2 = AIPlayer(15, 30)
+            else:
+                print("You will play second")
+                player_1 = AIPlayer(15, 30)
+                p2_name = input("Enter name for player 2: ")
+                player_2 = ManualPlayer(p2_name, 15, 30)
             break
 
     print("Starting Game...")
