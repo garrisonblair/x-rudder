@@ -16,7 +16,7 @@ class AIPlayer(Player):
             print("You no longer have tokens to place, you can try moving a token\n")
             return False
         score, move = self.mini_max(AIPlayer.game_state, 2, True)
-        print("Score: {}\nMove: {}".format(score, move))
+        print("Score: {}".format(score))
 
         if move['move_from'] == (-1, -1):
             return "1", move['move_to']

@@ -18,16 +18,21 @@ def main():
             player_2 = ManualPlayer(p2_name, 15, 30)
             break
         elif game_type == "1":
-            if randint(0, 1) == 0:
-                print("You will play first")
-                p1_name = input("Enter name for player 1: ")
-                player_1 = ManualPlayer(p1_name, 15, 30)
-                player_2 = AIPlayer(15, 30)
-            else:
-                print("You will play second")
-                player_1 = AIPlayer(15, 30)
-                p2_name = input("Enter name for player 2: ")
-                player_2 = ManualPlayer(p2_name, 15, 30)
+            while True:
+                print("Who will play first?")
+                first = input("1. Human\n2. Computer\n")
+                if first == "1":
+                    print("You will play first")
+                    p1_name = input("Enter name for player 1: ")
+                    player_1 = ManualPlayer(p1_name, 15, 30)
+                    player_2 = AIPlayer(15, 30)
+                    break
+                elif first == "2":
+                    print("Computer will play first")
+                    player_1 = AIPlayer(15, 30)
+                    p2_name = input("Enter name for player 2: ")
+                    player_2 = ManualPlayer(p2_name, 15, 30)
+                    break
             break
 
     print("Starting Game...")

@@ -75,7 +75,7 @@ class Game:
 
                 # Poll the player for their next move
                 attempt = self.current_player.get_next_move()
-                print("B: {}".format(attempt[1]))
+                # print("B: {}".format(attempt[1]))
                 if attempt:
                     # Player decides to place a new token
                     if attempt[0] == "1":
@@ -89,6 +89,8 @@ class Game:
                                 Player.p2_add_coordinate(attempt[1][1], attempt[1][0])
                                 Player.set_state(p2_tokens=self.current_player.tokens,
                                                  p2_moves=self.current_player.moves)
+                            display_move = Player.display_coordinates(attempt[1][1], attempt[1][0])
+                            print("{} has placed a token at {}".format(self.current_player.name, display_move))
                             break
                         print("Move is invalid, try a different move\n")
                         if isinstance(self.current_player, AIPlayer):
@@ -107,6 +109,11 @@ class Game:
                                 Player.p2_remove_coordinate(attempt[1][1], attempt[1][0])
                                 Player.p2_add_coordinate(attempt[2][1], attempt[2][0])
                                 Player.set_state(p2_moves=self.current_player.moves)
+                            display_move_from = Player.display_coordinates(attempt[1][1], attempt[1][0])
+                            display_move_to = Player.display_coordinates(attempt[2][1], attempt[2][0])
+                            print("{} has moved token from {} to {}".format(self.current_player.name,
+                                                                            display_move_from,
+                                                                            display_move_to))
                             break
                         print("Move is invalid, try a different move\n")
                         if isinstance(self.current_player, AIPlayer):
