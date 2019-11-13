@@ -63,11 +63,13 @@ class AIPlayer(Player):
         num_4_corners_min = 0
         num_5_not_crossed_min = 0
 
+        # Player 2 shapes
         for (x, y) in state.p2_coordinates:
             shape_size = 1
             shape_tiles = []
             num_crosses = 0
 
+            # Counting the token size of the shape originating at (x, y)
             if (x - 1, y - 1) in state.p2_coordinates:
                 shape_size += 1
                 shape_tiles.append((x - 1, y - 1))
@@ -81,23 +83,32 @@ class AIPlayer(Player):
                 shape_size += 1
                 shape_tiles.append((x + 1, y + 1))
 
+            # Counting the number of opponent tokens immediately left and right of (x, y)
             if (x - 1, y) in state.p1_coordinates:
                 num_crosses += 1
             if (x + 1, y) in state.p1_coordinates:
                 num_crosses += 1
 
+            # Shape of size 2 tokens
             if shape_size == 2:
                 num_2_max += 1
+            # Shape of size 3 tokens
             elif shape_size == 3:
+                # Ignore it if its origin is on the edge, as it is not viable
                 # Might not work, remove to fix
                 if x == 0 or x == state.width - 1 or y == 0 or y == state.height - 1:
                     continue
+                # Has no opponent cross
                 elif num_crosses == 0:
                     num_3_no_cross_max += 1
+                # Has one opponent cross
                 elif num_crosses == 1:
                     num_3_one_cross_max += 1
+            # Shape of size 4 tokens
             elif shape_size == 4:
+                # Has no opponent cross
                 if num_crosses == 0:
+                    # Opponent token blocking from finishing the full X shape
                     if (x - 1, y - 1) in state.p1_coordinates \
                             or (x + 1, y - 1) in state.p1_coordinates \
                             or (x - 1, y + 1) in state.p1_coordinates \
@@ -105,12 +116,17 @@ class AIPlayer(Player):
                         num_4_blocked_max += 1
                     else:
                         num_4_no_cross_max += 1
+                # Has one opponent cross
                 elif num_crosses == 1:
                     num_4_one_cross_max += 1
+            # Shape of size 5: Full X shape
             elif shape_size == 5:
+                # Check that it is not fully crossed off by opponent
                 if num_crosses != 2:
                     num_5_not_crossed_max += 1
 
+            # This checks for a "shape" of size 4 that is only missing the center token
+            # The shape is not connected so will not show up above
             if ((x, y + 2) in state.p2_coordinates) \
                     and ((x + 2, y) in state.p2_coordinates) \
                     and ((x + 2, y + 2) in state.p2_coordinates):
@@ -124,6 +140,7 @@ class AIPlayer(Player):
             shape_tiles = []
             num_crosses = 0
 
+            # Counting the token size of the shape originating at (x, y)
             if (x - 1, y - 1) in state.p1_coordinates:
                 shape_size += 1
                 shape_tiles.append((x - 1, y - 1))
@@ -137,23 +154,32 @@ class AIPlayer(Player):
                 shape_size += 1
                 shape_tiles.append((x + 1, y + 1))
 
+            # Counting the number of opponent tokens immediately left and right of (x, y)
             if (x - 1, y) in state.p2_coordinates:
                 num_crosses += 1
             if (x + 1, y) in state.p2_coordinates:
                 num_crosses += 1
 
+            # Shape of size 2 tokens
             if shape_size == 2:
                 num_2_min += 1
+            # Shape of size 3 tokens
             elif shape_size == 3:
+                # Ignore it if its origin is on the edge, as it is not viable
                 # Might not work, remove to fix
                 if x == 0 or x == state.height - 1 or y == 0 or y == state.width - 1:
                     continue
+                # Has no opponent cross
                 elif num_crosses == 0:
                     num_3_no_cross_min += 1
+                # Has one opponent cross
                 elif num_crosses == 1:
                     num_3_one_cross_min += 1
+            # Shape of size 4 tokens
             elif shape_size == 4:
+                # Has no opponent cross
                 if num_crosses == 0:
+                    # Opponent token blocking from finishing the full X shape
                     if (x - 1, y - 1) in state.p2_coordinates \
                             or (x + 1, y - 1) in state.p2_coordinates \
                             or (x - 1, y + 1) in state.p2_coordinates \
@@ -161,12 +187,16 @@ class AIPlayer(Player):
                         num_4_blocked_min += 1
                     else:
                         num_4_no_cross_min += 1
+                # Has one opponent cross
                 elif num_crosses == 1:
                     num_4_one_cross_min += 1
+            # Shape of size 5: Full X shape
             elif shape_size == 5:
                 if num_crosses != 2:
                     num_5_not_crossed_min += 1
 
+            # This checks for a "shape" of size 4 that is only missing the center token
+            # The shape is not connected so will not show up above
             if ((x, y + 2) in state.p1_coordinates) \
                     and ((x + 2, y) in state.p1_coordinates) \
                     and ((x + 2, y + 2) in state.p1_coordinates):
