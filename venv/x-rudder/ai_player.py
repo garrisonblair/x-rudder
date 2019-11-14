@@ -4,6 +4,7 @@ from state import State
 from random import choice, shuffle
 from math import inf
 import copy
+import pdb
 
 
 class AIPlayer(Player):
@@ -12,8 +13,8 @@ class AIPlayer(Player):
         super().__init__(choice(names), tokens, moves)
 
     def get_next_move(self):
-        if self.tokens == 0:
-            print("You no longer have tokens to place, you can try moving a token\n")
+        if self.moves == 0:
+            print("You are out of moves\n")
             return False
         score, move = self.mini_max(AIPlayer.game_state, 2, True)
         print("Score: {}".format(score))
@@ -32,8 +33,8 @@ class AIPlayer(Player):
         w_3_no_cross_max = 200
         w_4_one_cross_max = 1000
         w_4_no_cross_max = 1500
-        w_4_blocked_max = -100
-        w_4_corners_max = 1500
+        w_4_blocked_max = -10000
+        w_4_corners_max = 3500
         w_5_not_crossed_max = 100000
 
         w_2_min = 10
@@ -41,8 +42,8 @@ class AIPlayer(Player):
         w_3_no_cross_min = 500
         w_4_one_cross_min = 3000
         w_4_no_cross_min = 4500
-        w_4_blocked_min = -100
-        w_4_corners_min = 4500
+        w_4_blocked_min = -10000
+        w_4_corners_min = 6500
         w_5_not_crossed_min = 100000
 
         num_2_max = 0
@@ -118,7 +119,16 @@ class AIPlayer(Player):
                         num_4_no_cross_max += 1
                 # Has one opponent cross
                 elif num_crosses == 1:
-                    num_4_one_cross_max += 1
+                    # Player blocks opponent from cross
+                    if (x - 1, y) in state.p2_coordinates or (x + 1, y) in state.p2_coordinates:
+                        # Opponent token blocking from finishing the full X shape
+                        if (x - 1, y - 1) in state.p1_coordinates \
+                                or (x + 1, y - 1) in state.p1_coordinates \
+                                or (x - 1, y + 1) in state.p1_coordinates \
+                                or (x + 1, y + 1) in state.p1_coordinates:
+                            num_4_blocked_max += 1
+                    else:
+                        num_4_one_cross_max += 1
             # Shape of size 5: Full X shape
             elif shape_size == 5:
                 # Check that it is not fully crossed off by opponent
@@ -189,7 +199,16 @@ class AIPlayer(Player):
                         num_4_no_cross_min += 1
                 # Has one opponent cross
                 elif num_crosses == 1:
-                    num_4_one_cross_min += 1
+                    # Player blocks opponent from cross
+                    if (x - 1, y) in state.p1_coordinates or (x + 1, y) in state.p1_coordinates:
+                        # Opponent token blocking from finishing the full X shape
+                        if (x - 1, y - 1) in state.p2_coordinates \
+                                or (x + 1, y - 1) in state.p2_coordinates \
+                                or (x - 1, y + 1) in state.p2_coordinates \
+                                or (x + 1, y + 1) in state.p2_coordinates:
+                            num_4_blocked_min += 1
+                    else:
+                        num_4_one_cross_min += 1
             # Shape of size 5: Full X shape
             elif shape_size == 5:
                 if num_crosses != 2:
@@ -239,15 +258,16 @@ class AIPlayer(Player):
         if state.turn == 1:
             for w in range(state.width):
                 for h in range(state.height):
-                    if ((h, w) not in state.p1_coordinates + state.p2_coordinates) and state.p1_tokens > 0:
-                        new_state = copy.deepcopy(state)
-                        new_state.p1_coordinates.append((h, w))
-                        new_state.p1_tokens -= 1
-                        new_state.p1_moves -= 1
+                    if state.p1_tokens > 0:
+                        if (h, w) not in state.p1_coordinates + state.p2_coordinates:
+                            new_state = copy.deepcopy(state)
+                            new_state.p1_coordinates.append((h, w))
+                            new_state.p1_tokens -= 1
+                            new_state.p1_moves -= 1
 
-                        states["{}_{}__1".format(w, h)] = dict(state=new_state,
-                                                               move_from=(-1, -1),
-                                                               move_to=(h, w))
+                            states["{}_{}__1".format(w, h)] = dict(state=new_state,
+                                                                   move_from=(-1, -1),
+                                                                   move_to=(h, w))
                     elif (h, w) in state.p1_coordinates:
                         left = w - 1
                         right = w + 1
@@ -280,15 +300,16 @@ class AIPlayer(Player):
         elif state.turn == 2:
             for w in range(state.width):
                 for h in range(state.height):
-                    if ((h, w) not in state.p1_coordinates + state.p2_coordinates) and state.p2_tokens > 0:
-                        new_state = copy.deepcopy(state)
-                        new_state.p2_coordinates.append((h, w))
-                        new_state.p2_tokens -= 1
-                        new_state.p2_moves -= 1
+                    if state.p2_tokens > 0:
+                        if (h, w) not in state.p1_coordinates + state.p2_coordinates:
+                            new_state = copy.deepcopy(state)
+                            new_state.p2_coordinates.append((h, w))
+                            new_state.p2_tokens -= 1
+                            new_state.p2_moves -= 11
 
-                        states["{}_{}__2".format(w, h)] = dict(state=new_state,
-                                                               move_from=(-1, -1),
-                                                               move_to=(h, w))
+                            states["{}_{}__2".format(w, h)] = dict(state=new_state,
+                                                                   move_from=(-1, -1),
+                                                                   move_to=(h, w))
                     elif (h, w) in state.p2_coordinates:
                         left = w - 1
                         right = w + 1

@@ -27,19 +27,19 @@ class Player:
 
     @staticmethod
     def set_state(width=None, height=None, p1_tokens=None, p1_moves=None, p2_tokens=None, p2_moves=None, turn=None):
-        if width:
+        if width is not None:
             Player.game_state.width = width
-        if height:
+        if height is not None:
             Player.game_state.height = height
-        if p1_tokens:
+        if p1_tokens is not None:
             Player.game_state.p1_tokens = p1_tokens
-        if p1_moves:
+        if p1_moves is not None:
             Player.game_state.p1_moves = p1_moves
-        if p2_tokens:
+        if p2_tokens is not None:
             Player.game_state.p2_tokens = p2_tokens
-        if p2_moves:
+        if p2_moves is not None:
             Player.game_state.p2_moves = p2_moves
-        if turn:
+        if turn is not None:
             Player.game_state.turn = turn
 
     @staticmethod
