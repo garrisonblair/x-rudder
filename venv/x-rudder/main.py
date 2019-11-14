@@ -4,13 +4,13 @@ from random import randint
 
 
 def main():
-    print("#######################################")
-    print("# W E L C O M E  T O  X - R U D D E R #")
-    print("#######################################")
+    print("################################################")
+    print("#####        X  -  R  U  D  D  E  R        #####")
+    print("################################################")
 
     while True:
         print("\nHow many are playing?")
-        game_type = input("1. One Player\n2. Two Player\n")
+        game_type = input("1. One Player\n2. Two Player")
         if game_type == "2":
             p1_name = input("Enter name for player 1: ")
             player_1 = ManualPlayer(p1_name, 15, 30)
@@ -33,6 +33,10 @@ def main():
                     p2_name = input("Enter name for player 2: ")
                     player_2 = ManualPlayer(p2_name, 15, 30)
                     break
+            break
+        elif game_type == "3":
+            player_1 = AIPlayer(15, 30)
+            player_2 = AIPlayer(15, 30)
             break
 
     print("Starting Game...")
