@@ -33,8 +33,8 @@ class AIPlayer(Player):
         w_3_no_cross_max = 200
         w_4_one_cross_max = 1000
         w_4_no_cross_max = 1500
-        w_4_blocked_max = -10000
         w_4_corners_max = 3500
+        w_4_blocked_max = 30000
         w_5_not_crossed_max = 100000
 
         w_2_min = 10
@@ -42,8 +42,8 @@ class AIPlayer(Player):
         w_3_no_cross_min = 500
         w_4_one_cross_min = 3000
         w_4_no_cross_min = 4500
-        w_4_blocked_min = -10000
         w_4_corners_min = 6500
+        w_4_blocked_min = 50000
         w_5_not_crossed_min = 100000
 
         num_2_max = 0
@@ -51,8 +51,8 @@ class AIPlayer(Player):
         num_3_no_cross_max = 0
         num_4_one_cross_max = 0
         num_4_no_cross_max = 0
-        num_4_blocked_max = 0
         num_4_corners_max = 0
+        num_4_blocked_max = 0
         num_5_not_crossed_max = 0
 
         num_2_min = 0
@@ -60,8 +60,8 @@ class AIPlayer(Player):
         num_3_no_cross_min = 0
         num_4_one_cross_min = 0
         num_4_no_cross_min = 0
-        num_4_blocked_min = 0
         num_4_corners_min = 0
+        num_4_blocked_min = 0
         num_5_not_crossed_min = 0
 
         # Player 2 shapes
@@ -96,7 +96,6 @@ class AIPlayer(Player):
             # Shape of size 3 tokens
             elif shape_size == 3:
                 # Ignore it if its origin is on the edge, as it is not viable
-                # Might not work, remove to fix
                 if x == 0 or x == state.width - 1 or y == 0 or y == state.height - 1:
                     continue
                 # Has no opponent cross
@@ -109,11 +108,11 @@ class AIPlayer(Player):
             elif shape_size == 4:
                 # Has no opponent cross
                 if num_crosses == 0:
-                    # Opponent token blocking from finishing the full X shape
-                    if (x - 1, y - 1) in state.p1_coordinates \
-                            or (x + 1, y - 1) in state.p1_coordinates \
-                            or (x - 1, y + 1) in state.p1_coordinates \
-                            or (x + 1, y + 1) in state.p1_coordinates:
+                    # No opponent token blocking from finishing the full X shape
+                    if ((x - 1, y - 1) not in state.p1_coordinates + state.p2_coordinates) \
+                            or ((x + 1, y - 1) not in state.p1_coordinates + state.p2_coordinates) \
+                            or ((x - 1, y + 1) not in state.p1_coordinates + state.p2_coordinates) \
+                            or ((x + 1, y + 1) not in state.p1_coordinates + state.p2_coordinates):
                         num_4_blocked_max += 1
                     else:
                         num_4_no_cross_max += 1
@@ -121,11 +120,11 @@ class AIPlayer(Player):
                 elif num_crosses == 1:
                     # Player blocks opponent from cross
                     if (x - 1, y) in state.p2_coordinates or (x + 1, y) in state.p2_coordinates:
-                        # Opponent token blocking from finishing the full X shape
-                        if (x - 1, y - 1) in state.p1_coordinates \
-                                or (x + 1, y - 1) in state.p1_coordinates \
-                                or (x - 1, y + 1) in state.p1_coordinates \
-                                or (x + 1, y + 1) in state.p1_coordinates:
+                        # No opponent token blocking from finishing the full X shape
+                        if ((x - 1, y - 1) not in state.p1_coordinates + state.p2_coordinates) \
+                                or ((x + 1, y - 1) not in state.p1_coordinates + state.p2_coordinates) \
+                                or ((x - 1, y + 1) not in state.p1_coordinates + state.p2_coordinates) \
+                                or ((x + 1, y + 1) not in state.p1_coordinates + state.p2_coordinates):
                             num_4_blocked_max += 1
                     else:
                         num_4_one_cross_max += 1
@@ -176,7 +175,6 @@ class AIPlayer(Player):
             # Shape of size 3 tokens
             elif shape_size == 3:
                 # Ignore it if its origin is on the edge, as it is not viable
-                # Might not work, remove to fix
                 if x == 0 or x == state.height - 1 or y == 0 or y == state.width - 1:
                     continue
                 # Has no opponent cross
@@ -189,11 +187,11 @@ class AIPlayer(Player):
             elif shape_size == 4:
                 # Has no opponent cross
                 if num_crosses == 0:
-                    # Opponent token blocking from finishing the full X shape
-                    if (x - 1, y - 1) in state.p2_coordinates \
-                            or (x + 1, y - 1) in state.p2_coordinates \
-                            or (x - 1, y + 1) in state.p2_coordinates \
-                            or (x + 1, y + 1) in state.p2_coordinates:
+                    # No opponent token blocking from finishing the full X shape
+                    if ((x - 1, y - 1) not in state.p2_coordinates + state.p1_coordinates) \
+                            or ((x + 1, y - 1) not in state.p2_coordinates + state.p1_coordinates) \
+                            or ((x - 1, y + 1) not in state.p2_coordinates + state.p1_coordinates) \
+                            or ((x + 1, y + 1) not in state.p2_coordinates + state.p1_coordinates):
                         num_4_blocked_min += 1
                     else:
                         num_4_no_cross_min += 1
@@ -201,11 +199,11 @@ class AIPlayer(Player):
                 elif num_crosses == 1:
                     # Player blocks opponent from cross
                     if (x - 1, y) in state.p1_coordinates or (x + 1, y) in state.p1_coordinates:
-                        # Opponent token blocking from finishing the full X shape
-                        if (x - 1, y - 1) in state.p2_coordinates \
-                                or (x + 1, y - 1) in state.p2_coordinates \
-                                or (x - 1, y + 1) in state.p2_coordinates \
-                                or (x + 1, y + 1) in state.p2_coordinates:
+                        # No opponent token blocking from finishing the full X shape
+                        if ((x - 1, y - 1) not in state.p2_coordinates + state.p1_coordinates) \
+                                or ((x + 1, y - 1) not in state.p2_coordinates + state.p1_coordinates) \
+                                or ((x - 1, y + 1) not in state.p2_coordinates + state.p1_coordinates) \
+                                or ((x + 1, y + 1) not in state.p2_coordinates + state.p1_coordinates):
                             num_4_blocked_min += 1
                     else:
                         num_4_one_cross_min += 1
@@ -229,8 +227,8 @@ class AIPlayer(Player):
                       w_3_no_cross_max * num_3_no_cross_max +
                       w_4_one_cross_max * num_4_one_cross_max +
                       w_4_no_cross_max * num_4_no_cross_max +
-                      w_4_blocked_max * num_4_blocked_max +
                       w_4_corners_max * num_4_corners_max +
+                      w_4_blocked_max * num_4_blocked_max +
                       w_5_not_crossed_max * num_5_not_crossed_max)
 
         min_score += (w_2_min * num_2_min +
@@ -238,8 +236,8 @@ class AIPlayer(Player):
                       w_3_no_cross_min * num_3_no_cross_min +
                       w_4_one_cross_min * num_4_one_cross_min +
                       w_4_no_cross_min * num_4_no_cross_min +
-                      w_4_blocked_min * num_4_blocked_min +
                       w_4_corners_min * num_4_corners_min +
+                      w_4_blocked_min * num_4_blocked_min +
                       w_5_not_crossed_min * num_5_not_crossed_min)
 
         score = 0
