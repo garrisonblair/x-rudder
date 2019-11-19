@@ -38,7 +38,7 @@ class Game:
         end = 7 + int(values[6])
         for i in range(7, end):
             coordinates = values[i].split('-')
-            x, y = int(coordinates[0]), int(coordinates[1])
+            x, y = int(coordinates[1]), int(coordinates[0])
             board.fill_tile(x, y, player_1.id)
             Player.p1_add_coordinate(x, y)
         i = end
@@ -50,7 +50,7 @@ class Game:
         end = i + 5 + int(values[i+4])
         for j in range(i + 5, end):
             coordinates = values[j].split('-')
-            x, y = int(coordinates[0]), int(coordinates[1])
+            x, y = int(coordinates[1]), int(coordinates[0])
             board.fill_tile(x, y, player_2.id)
             Player.p2_add_coordinate(x, y)
         j = end
