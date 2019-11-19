@@ -4,13 +4,14 @@ from state import State
 from random import choice, shuffle
 from math import inf
 import copy
-import pdb
 
 
 class AIPlayer(Player):
-    def __init__(self, tokens, moves):
+    def __init__(self, tokens, moves, name=None):
         names = ("TARS", "Ava", "J.A.R.V.I.S", "Friday", "Christopher", "Ultron", "Samantha", "HAL 9000")
-        super().__init__(choice(names), tokens, moves)
+        if name is None:
+            name = choice(names)
+        super().__init__(name, tokens, moves)
 
     def get_next_move(self):
         if self.moves == 0:
