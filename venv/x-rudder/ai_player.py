@@ -41,7 +41,7 @@ class AIPlayer(Player):
         w_2_min = 10
         w_3_one_cross_min = 50
         w_3_no_cross_min = 500
-        w_4_one_cross_min = 3000
+        w_4_one_cross_min = 35000
         w_4_no_cross_min = 4500
         w_4_corners_min = 6500
         w_4_blocked_min = 50000

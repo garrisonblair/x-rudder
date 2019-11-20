@@ -66,7 +66,7 @@ class Game:
             Player.set_state(width=int(values[0]),
                              height=int(values[1]),
                              turn=2)
-        return cls(player_1=player_1, player_2=player_2, board=board, current_player=current_player)
+        return cls(player_1=player_1, player_2=player_2, board=board, current_player=current_player, moves=30)
 
     def get_next_player(self):
         if self.current_player == self.player_1:
@@ -122,15 +122,16 @@ class Game:
 
     def evaluate_winner(self):
         # Check if current player is in a winning state
-        for row in range(1, self.board.width-2):
-            for cell in range(1, self.board.height-2):
+        for row in range(1, self.board.width-1):
+            for cell in range(1, self.board.height-1):
                 if self.find_cross(row, cell, self.current_player.id):
+                    print(row, cell)
                     if not self.find_strikethrough(row, cell, self.get_next_player().id):
                         return self.current_player
 
         # Check if next player is in a winning state
-        for row in range(1, self.board.width-2):
-            for cell in range(1, self.board.height-2):
+        for row in range(1, self.board.width-1):
+            for cell in range(1, self.board.height-1):
                 if self.find_cross(row, cell, self.get_next_player().id):
                     if not self.find_strikethrough(row, cell, self.current_player.id):
                         return self.get_next_player()
