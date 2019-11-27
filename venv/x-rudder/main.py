@@ -38,11 +38,17 @@ def main():
             player_1 = AIPlayer(15, 30)
             player_2 = AIPlayer(15, 30)
             break
+        elif game_type == "4":
+            seed = input("Paste seed here ;)\n")
+            break
 
     print("Starting Game...")
 
-    game = Game(10, 12, player_1, player_2, 15, 30)
-    Player.set_state(width=10, height=12, p1_tokens=15, p1_moves=30, p2_tokens=15, p2_moves=30, turn=1)
+    if game_type == "4":
+        game = Game.from_seed(seed)
+    else:
+        game = Game(width=10, height=12, player_1=player_1, player_2=player_2, tokens=15, moves=30)
+        Player.set_state(width=10, height=12, p1_tokens=15, p1_moves=30, p2_tokens=15, p2_moves=30, turn=1)
     game.play()
 
 

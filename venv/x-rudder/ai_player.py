@@ -4,13 +4,14 @@ from state import State
 from random import choice, shuffle
 from math import inf
 import copy
-import pdb
 
 
 class AIPlayer(Player):
-    def __init__(self, tokens, moves):
+    def __init__(self, tokens, moves, name=None):
         names = ("TARS", "Ava", "J.A.R.V.I.S", "Friday", "Christopher", "Ultron", "Samantha", "HAL 9000")
-        super().__init__(choice(names), tokens, moves)
+        if name is None:
+            name = choice(names)
+        super().__init__(name, tokens, moves)
 
     def get_next_move(self):
         if self.moves == 0:
@@ -40,7 +41,7 @@ class AIPlayer(Player):
         w_2_min = 10
         w_3_one_cross_min = 50
         w_3_no_cross_min = 500
-        w_4_one_cross_min = 3000
+        w_4_one_cross_min = 35000
         w_4_no_cross_min = 4500
         w_4_corners_min = 6500
         w_4_blocked_min = 50000
